@@ -14,11 +14,25 @@ class PromocaoController {
     fun bunjourLemonde(): String {
         return "Bonjour le monde!"
     }
+    
     @RequestMapping(value = ["/promocoes/{id}"], method = arrayOf(RequestMethod.GET))
-    fun getGetId(@PathVariable id:Long) = promocoes[id]
+    fun getGetId(@PathVariable id: Long) = promocoes[id]
     
     @RequestMapping(value = ["/promocoes"], method = arrayOf(RequestMethod.POST))
-    fun create(@RequestBody promocao: Promocao){
+    fun create(@RequestBody promocao: Promocao) {
         promocoes[promocao.id] = promocao
+    }
+    
+    @RequestMapping(value = ["/promocao/{id}"], method = arrayOf(RequestMethod.DELETE))
+    fun delete(@PathVariable id: Long, @RequestBody promocao: Promocao) {
+        promocoes.remove(id)
+        promocoes[id] = promocao
+    }
+    @RequestMapping(value = ["/promocoes"], method = arrayOf(RequestMethod.GET))
+    fun getAll(@RequestParam(required = false, defaultValue = " ")localFilter:String) {
+        promocoes.filter {
+            it.value.local.contains(localFilter, true)
+        }.map(Map.Entry<Long, Promocao>::value).toList()
+        
     }
 }
